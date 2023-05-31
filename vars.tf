@@ -1,1 +1,1 @@
-var "cidr_block" {}
+variable "cidr_block" {}
