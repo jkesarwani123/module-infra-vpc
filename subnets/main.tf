@@ -1,3 +1,4 @@
+# Create Subnet
 resource "aws_subnet" "main" {
   count = length(var.cidr_block)
   vpc_id     = var.vpc_id
@@ -5,5 +6,12 @@ resource "aws_subnet" "main" {
   availability_zone = var.azs[count.index]
   tags = merge(var.tags, { Name = "${var.env}-${var.name}-subnet-${count.index + 1}"})
 
+}
+
+# Create Route Tables
+resource "aws_route_table" "main" {
+  count = length(var.cidr_block)
+  vpc_id = var.vpc_id
+  tags = merge(var.tags, { Name = "${var.env}-${var.name}-rt-${count.index + 1}" })
 }
 
