@@ -15,6 +15,7 @@ resource "aws_route_table" "main" {
   tags = merge(var.tags, { Name = "${var.env}-${var.name}-rt-${count.index + 1}" })
 }
 
+# Attach Route Table to corresponding subnet
 resource "aws_route_table_association" "associate" {
   count = length(var.cidr_block)
   subnet_id      = aws_subnet.main[count.index].id
