@@ -1,2 +1,2 @@
 # module-infra-vpc
-Module-Create VPC
+Create VPC
