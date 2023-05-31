@@ -3,11 +3,11 @@ resource "aws_vpc" "main" {
   tags = merge(var.tags, { Name = "${var.env}-vpc"})
 }
 
-resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
-
-  tags = {
-    Name = "Main"
-  }
+module "subnets" {
+  source = "./subnets"
+  for_each = var.subnets
+  vpc_id = aws_vpc.main.id
+  cidr_block = each.value["cidr_block"]
+  name = each.value["name"]
+  env = var.env
 }
