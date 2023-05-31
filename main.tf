@@ -41,3 +41,11 @@ resource "aws_nat_gateway" "ngw" {
 #  value = module.subnets
 #}
 
+# Add Internet Gateway to public routes attached to public subnets only
+resource "aws_route" "igw" {
+  count         = length(var.subnets["public"].route_table_ids)
+  route_table_id = module.subnets["public"].route_table_ids[count.index]
+  gateway_id = aws_internet_gateway.igw.id
+  destination_cidr_block = "0.0.0.0/0"
+}
+
