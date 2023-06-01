@@ -49,7 +49,7 @@ resource "aws_route" "igw" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
- Add NAT Gateway to private routes attached to app/web/db subnets only
+#Add NAT Gateway to private routes attached to app/web/db subnets in corresponding availability zones
 resource "aws_route" "ngw" {
   count         = length(local.all_private_subnet_ids)
   route_table_id = local.all_private_subnet_ids[count.index]
