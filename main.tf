@@ -49,18 +49,18 @@ resource "aws_route" "igw" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
-# Add NAT Gateway to private routes attached to app/web/db subnets only
-#resource "aws_route" "ngw" {
-#  count         = length(local.all_private_subnet_ids)
-#  route_table_id = local.all_private_subnet_ids[count.index]
-#  gateway_id = aws_nat_gateway.ngw.id
-#  destination_cidr_block = "0.0.0.0/0"
+ Add NAT Gateway to private routes attached to app/web/db subnets only
+resource "aws_route" "ngw" {
+  count         = length(local.all_private_subnet_ids)
+  route_table_id = local.all_private_subnet_ids[count.index]
+  gateway_id = element(aws_nat_gateway.ngw.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+}
+#
+#output "subnet" {
+#  value = module.subnets
 #}
-
-output "subnet" {
-  value = module.subnets
-}
-
-output "ngw" {
-  value = aws_nat_gateway.ngw
-}
+#
+#output "ngw" {
+#  value = aws_nat_gateway.ngw
+#}
