@@ -60,7 +60,7 @@ resource "aws_vpc_peering_connection" "peer" {
   auto_accept = true
 }
 
-#Add peering connection route
+#Add peering connection route to all apps other than public
 resource "aws_route" "peering_connection_route" {
   count         = length(local.all_private_subnet_ids)
   route_table_id = element(local.all_private_subnet_ids, count.index)
