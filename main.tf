@@ -55,15 +55,7 @@ resource "aws_route" "ngw" {
 
 # Add a peering connection for workspace node
 resource "aws_vpc_peering_connection" "peer" {
-  peer_owner_id = var.peer_owner_id
-  peer_vpc_id   = aws_vpc.bar.id
-  vpc_id        = aws_vpc.foo.id
-
-  accepter {
-    allow_remote_vpc_dns_resolution = true
-  }
-
-  requester {
-    allow_remote_vpc_dns_resolution = true
-  }
+  peer_vpc_id   = var.default_vpc_id
+  vpc_id        = aws_vpc.main.id
+  auto_accept = true
 }
