@@ -59,3 +59,18 @@ resource "aws_vpc_peering_connection" "peer" {
   vpc_id        = aws_vpc.main.id
   auto_accept = true
 }
+
+#Add peering connection route
+resource "aws_route" "peering_connection_route" {
+  count         = length(module.subnets["public"].route_table_ids)
+  route_table_id = module.subnets["public"].route_table_ids[count.index]
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  destination_cidr_block = var.default_vpc_cidr
+}
+
+#Add peering connection route on workspace-default VPC
+resource "aws_route" "peering_connection_route_in_default_vpc" {
+  route_table_id = var.default_vpc_rtid
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+  destination_cidr_block = var.cidr_block
+}
