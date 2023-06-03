@@ -36,10 +36,6 @@ resource "aws_nat_gateway" "ngw" {
 
   tags = merge(var.tags, { Name = "${var.env}-ngw" })
 }
-#
-#output "subnet_ids" {
-#  value = module.subnets
-#}
 
 # Add Internet Gateway to public routes attached to public subnets only
 resource "aws_route" "igw" {
@@ -56,11 +52,18 @@ resource "aws_route" "ngw" {
   gateway_id = element(aws_nat_gateway.ngw.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
 }
-#
-#output "subnet" {
-#  value = module.subnets
-#}
-#
-#output "ngw" {
-#  value = aws_nat_gateway.ngw
-#}
+
+# Add a peering connection for workspace node
+resource "aws_vpc_peering_connection" "peer" {
+  peer_owner_id = var.peer_owner_id
+  peer_vpc_id   = aws_vpc.bar.id
+  vpc_id        = aws_vpc.foo.id
+
+  accepter {
+    allow_remote_vpc_dns_resolution = true
+  }
+
+  requester {
+    allow_remote_vpc_dns_resolution = true
+  }
+}
